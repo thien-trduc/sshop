@@ -1,0 +1,14 @@
+{
+    "version": 2,
+    "projects": {
+        "backend-admin-api": "packages/backend-admin-api",
+        "event-service": "packages/event-service",
+        "libs-core": "packages/libs/core",
+        "libs-data": "packages/libs/data",
+        "libs-firebase-admin": "packages/libs/firebase-admin",
+        "libs-sendgrid": "packages/libs/sendgrid",
+        "payment": "packages/payment",
+        "storage": "packages/storage",
+        "webhook": "packages/webhook"
+    }
+}

@@ -1,0 +1,463 @@
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["interactiveTransactions"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Role {
+  id          Int        @id @default(autoincrement())
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  name        String     @db.VarChar(50)
+  description String     @db.VarChar(255)
+  role_users  RoleUser[]
+
+  @@map("role")
+}
+
+model User {
+  id            Int          @id @default(autoincrement())
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
+  username      String       @unique @db.VarChar(100)
+  password      String       @db.VarChar(500)
+  avatar        String?      @db.VarChar(500)
+  profile       UserProfile?
+  refresh_token String?
+  role_users    RoleUser[]
+
+  @@index([createdAt, updatedAt])
+  @@map("users")
+}
+
+model RoleUser {
+  role_id Int
+  user_id Int
+  role    Role @relation(fields: [role_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  user    User @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  status  Int  @default(1)
+
+  @@id([role_id, user_id])
+  @@map("role_user")
+}
+
+model UserProfile {
+  id        Int       @id @default(autoincrement())
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  surname   String    @db.VarChar(255)
+  name      String    @db.VarChar(255)
+  age       Int?      @default(0) @db.SmallInt
+  gender    Boolean?  @default(false)
+  birthdate DateTime? @default(now()) @db.Time(6)
+  address   String?   @default("") @db.VarChar(500)
+  mobile    String?   @db.VarChar(15)
+  email     String    @db.VarChar(255)
+  userId    Int       @unique @map("user_id")
+  user      User      @relation(fields: [userId], references: [id])
+  fullname  String?   @db.VarChar(500)
+
+  @@index([createdAt, updatedAt])
+  @@map("user_profiles")
+}
+
+model event {
+  sequencenum Int      @id @default(autoincrement())
+  streamid    String   @db.VarChar(500)
+  version     Int
+  data        Json
+  type        String
+  meta        Json
+  logdate     DateTime @default(now()) @db.Timestamptz(6)
+  stream      stream   @relation(fields: [streamid], references: [streamid], onDelete: NoAction, onUpdate: NoAction)
+
+  @@unique([streamid, version])
+}
+
+model snapshot {
+  streamid String @id @db.VarChar(500)
+  version  Int
+  data     Json
+  revision Int
+}
+
+model stream {
+  streamid String  @id @db.VarChar(500)
+  version  Int
+  type     String
+  event    event[]
+
+  @@index([type], map: "idx_stream_type")
+}
+
+model message_events {
+  id         Int       @id @default(autoincrement())
+  createdat  DateTime? @default(now()) @db.Timestamp(6)
+  updatedat  DateTime? @default(now()) @db.Timestamp(6)
+  type       String?   @db.VarChar(15)
+  status     Int?      @default(0) @db.SmallInt
+  title      String?   @db.VarChar(500)
+  topicid    String?   @db.VarChar(255)
+  data       Json?
+  streamid   String?   @db.VarChar(500)
+  message    String?
+  error_body String?
+}
+
+model cache_keys {
+  id        Int       @id @default(autoincrement())
+  createdat DateTime? @default(now()) @db.Timestamp(6)
+  updatedat DateTime? @default(now()) @db.Timestamp(6)
+  key       String    @unique @db.VarChar(500)
+  isDeleted Boolean   @default(false)
+}
+
+model Category {
+  id          Int       @id @default(autoincrement())
+  createdat   DateTime? @default(now()) @db.Timestamp(6)
+  updatedat   DateTime? @default(now()) @db.Timestamp(6)
+  name        String    @unique @db.VarChar(255)
+  description String?   @unique @db.VarChar(255)
+  icon        String?
+  slug        String?
+  book        Book[]
+  priority    Int       @default(0)
+
+  @@map("category")
+}
+
+model Publisher {
+  id        Int       @id @default(autoincrement())
+  createdat DateTime? @default(now()) @db.Timestamp(6)
+  updatedat DateTime? @default(now()) @db.Timestamp(6)
+  name      String    @db.VarChar(255)
+  address   String?   @db.VarChar(500)
+  email     String?   @db.VarChar(255)
+  book      Book[]
+
+  @@map("publisher")
+}
+
+model Book {
+  isbn                 String              @id @db.VarChar(255)
+  createdat            DateTime?           @default(now()) @db.Timestamp(6)
+  updatedat            DateTime?           @default(now()) @db.Timestamp(6)
+  name                 String              @db.VarChar(500)
+  page                 BigInt              @default(0)
+  quantity             BigInt              @default(0)
+  yearOfPublish        Int                 @db.SmallInt
+  status               Int                 @default(0) @db.SmallInt
+  image                String?             @db.VarChar(500)
+  slug                 String?             @unique
+  category_id          Int
+  publisher_id         Int
+  description          String?             @db.VarChar(1000)
+  info_details         String?
+  images               String[]
+  category             Category            @relation(fields: [category_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  publisher            Publisher           @relation(fields: [publisher_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  booking_prices       BookPrice[]
+  book_receipt_details BookReceiptDetail[]
+  book_repay_details   BookRepayDetail[]
+  cart_details         CartDetail[]
+  detail_composes      DetailCompose[]
+  discount_details     DiscountDetail[]
+  order_details        OrderDetail[]
+
+  @@map("book")
+}
+
+model BookPrice {
+  book_id String   @db.VarChar(255)
+  date    DateTime @default(now()) @db.Timestamp(6)
+  price   Float
+  book    Book     @relation(fields: [book_id], references: [isbn], onDelete: Cascade)
+
+  @@id([date, book_id])
+  @@map("book_price")
+}
+
+model Customer {
+  id               Int               @id @default(autoincrement())
+  createdat        DateTime?         @default(now()) @db.Timestamp(6)
+  updatedat        DateTime?         @default(now()) @db.Timestamp(6)
+  name             String            @db.VarChar(255)
+  surname          String            @db.VarChar(255)
+  sex              Int               @default(1) @db.SmallInt
+  birthdate        String            @db.VarChar(255)
+  address          String            @db.VarChar(255)
+  phone            String            @db.VarChar(15)
+  email            String            @db.VarChar(255)
+  fullname         String?           @db.VarChar(500)
+  avatar           String?
+  userId           Int               @unique @map("user_id")
+  cart             Cart[]
+  order            Order[]
+  customer_address CustomerAddress[]
+
+  @@map("customer")
+}
+
+model Author {
+  id              Int             @id @default(autoincrement())
+  createdat       DateTime?       @default(now()) @db.Timestamp(6)
+  updatedat       DateTime?       @default(now()) @db.Timestamp(6)
+  fullname        String          @db.VarChar(255)
+  birthdate       String          @db.VarChar(255)
+  sex             Int             @default(1) @db.SmallInt
+  phone           String          @db.VarChar(15)
+  address         String          @db.VarChar(255)
+  email           String          @db.VarChar(255)
+  detail_composes DetailCompose[]
+
+  @@map("author")
+}
+
+model DetailCompose {
+  author_id Int
+  book_id   String  @db.VarChar(255)
+  detail    String? @db.VarChar(255)
+  author    Author  @relation(fields: [author_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  book      Book    @relation(fields: [book_id], references: [isbn], onDelete: NoAction, onUpdate: NoAction)
+
+  @@id([author_id, book_id])
+  @@map("detail_compose")
+}
+
+model Department {
+  id        Int        @id @default(autoincrement())
+  createdat DateTime?  @default(now()) @db.Timestamp(6)
+  updatedat DateTime?  @default(now()) @db.Timestamp(6)
+  name      String     @unique @db.VarChar(255)
+  employee  Employee[]
+
+  @@map("department")
+}
+
+model Employee {
+  id            Int           @id @default(autoincrement())
+  createdat     DateTime?     @default(now()) @db.Timestamp(6)
+  updatedat     DateTime?     @default(now()) @db.Timestamp(6)
+  name          String        @db.VarChar(255)
+  surname       String        @db.VarChar(255)
+  sex           Int           @default(1) @db.SmallInt
+  birthdate     String        @db.VarChar(255)
+  address       String        @db.VarChar(255)
+  phone         String        @db.VarChar(15)
+  email         String        @db.VarChar(255)
+  department_id Int
+  user_id       Int
+  department    Department    @relation(fields: [department_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  BookReceipt   BookReceipt[]
+  book_repays   BookRepay[]
+  Cart          Cart[]
+  discounts     Discount[]
+  order         Order[]
+  receipts      Receipt[]
+
+  @@map("employee")
+}
+
+model Order {
+  id             Int           @id @default(autoincrement())
+  createdat      DateTime?     @default(now()) @db.Timestamp(6)
+  updatedat      DateTime?     @default(now()) @db.Timestamp(6)
+  date           DateTime      @default(now()) @db.Timestamp(6)
+  employee_id    Int?
+  status         String
+  type           Int           @default(1)
+  total_price    Float
+  receiver       Json
+  transaction_id String        @unique @db.VarChar(100)
+  session        String
+  customer_id    Int?
+  customer       Customer?     @relation(fields: [customer_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  employee       Employee?     @relation(fields: [employee_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  book_receipts  BookReceipt[]
+  order_details  OrderDetail[]
+  receipts       Receipt[]
+
+  @@map("order")
+}
+
+model OrderDetail {
+  order_id      Int
+  book_id       String @db.VarChar(255)
+  quantity      BigInt
+  price         Float
+  priceDiscount Float  @default(0)
+  book          Book   @relation(fields: [book_id], references: [isbn], onDelete: NoAction, onUpdate: NoAction)
+  order         Order  @relation(fields: [order_id], references: [id], onDelete: Cascade)
+
+  @@id([order_id, book_id])
+  @@map("order_detail")
+}
+
+model BookReceipt {
+  id                   Int                 @id @default(autoincrement())
+  createdat            DateTime?           @default(now()) @db.Timestamp(6)
+  updatedat            DateTime?           @default(now()) @db.Timestamp(6)
+  note                 String              @db.VarChar(255)
+  order_id             Int
+  employee_id          Int
+  employee             Employee            @relation(fields: [employee_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  order                Order               @relation(fields: [order_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  book_receipt_details BookReceiptDetail[]
+
+  @@map("book_receipt")
+}
+
+model BookReceiptDetail {
+  book_receipt_id Int
+  book_id         String      @db.VarChar(255)
+  quantity        BigInt
+  price           Float
+  book            Book        @relation(fields: [book_id], references: [isbn], onDelete: NoAction, onUpdate: NoAction)
+  book_receipt    BookReceipt @relation(fields: [book_receipt_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@id([book_receipt_id, book_id])
+  @@map("book_receipt_detail")
+}
+
+model Cart {
+  id            String       @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  createdat     DateTime?    @default(now()) @db.Timestamp(6)
+  updatedat     DateTime?    @default(now()) @db.Timestamp(6)
+  date          DateTime     @default(now()) @db.Timestamp(6)
+  status        Int          @default(1) @db.SmallInt
+  receive_name  String       @db.VarChar(500)
+  address       String       @db.VarChar(500)
+  receive_phone String       @db.VarChar(15)
+  employee_id   Int?
+  customer_id   Int
+  customer      Customer     @relation(fields: [customer_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  employee      Employee?    @relation(fields: [employee_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  cart_details  CartDetail[]
+
+  @@map("cart")
+}
+
+model CartDetail {
+  cart_id     String   @db.Uuid
+  book_id     String   @db.VarChar(255)
+  quantity    BigInt
+  price       Float
+  is_selected Boolean?
+  book        Book     @relation(fields: [book_id], references: [isbn], onDelete: Cascade)
+  cart        Cart     @relation(fields: [cart_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@id([cart_id, book_id])
+  @@map("cart_detail")
+}
+
+model Receipt {
+  id          Int         @id @default(autoincrement())
+  createdat   DateTime?   @default(now()) @db.Timestamp(6)
+  updatedat   DateTime?   @default(now()) @db.Timestamp(6)
+  tax_code    String      @db.VarChar(25)
+  employee_id Int
+  order_id    Int
+  employee    Employee    @relation(fields: [employee_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  order       Order       @relation(fields: [order_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  book_repays BookRepay[]
+
+  @@map("receipt")
+}
+
+model BookRepay {
+  id                 Int               @id @default(autoincrement())
+  createdat          DateTime?         @default(now()) @db.Timestamp(6)
+  updatedat          DateTime?         @default(now()) @db.Timestamp(6)
+  date               DateTime          @default(now()) @db.Timestamp(6)
+  employee_id        Int
+  receipt_id         Int
+  employee           Employee          @relation(fields: [employee_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  receipt            Receipt           @relation(fields: [receipt_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  book_repay_details BookRepayDetail[]
+
+  @@map("book_repay")
+}
+
+model BookRepayDetail {
+  book_id       String    @db.VarChar(255)
+  book_repay_id Int
+  quantity      BigInt
+  price         Float
+  description   String    @db.VarChar(500)
+  book          Book      @relation(fields: [book_id], references: [isbn], onDelete: NoAction, onUpdate: NoAction)
+  book_repay    BookRepay @relation(fields: [book_repay_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@id([book_repay_id, book_id])
+  @@map("book_repay_detail")
+}
+
+model Discount {
+  id               Int              @id @default(autoincrement())
+  createdat        DateTime?        @default(now()) @db.Timestamp(6)
+  updatedat        DateTime?        @default(now()) @db.Timestamp(6)
+  name             String           @db.VarChar(500)
+  start_date       DateTime         @default(now()) @db.Timestamp(6)
+  end_date         DateTime         @default(now()) @db.Timestamp(6)
+  description      String           @db.VarChar(500)
+  employee_id      Int
+  employee         Employee         @relation(fields: [employee_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  discount_details DiscountDetail[]
+
+  @@map("discount")
+}
+
+model DiscountDetail {
+  discount_id Int
+  book_id     String   @db.VarChar(255)
+  type        Int      @default(1) @db.SmallInt
+  value       Float
+  status      Boolean  @default(true)
+  book        Book     @relation(fields: [book_id], references: [isbn], onDelete: Cascade)
+  discount    Discount @relation(fields: [discount_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@id([discount_id, book_id])
+  @@map("discount_detail")
+}
+
+model CustomerAddress {
+  id          Int       @id @default(autoincrement())
+  createdat   DateTime? @default(now()) @db.Timestamp(6)
+  updatedat   DateTime? @default(now()) @db.Timestamp(6)
+  label       String    @db.VarChar(225)
+  address     String    @unique @db.VarChar(1000)
+  fullname    String    @db.VarChar(225)
+  phone       String    @unique @db.VarChar(15)
+  customer_id Int
+  customer    Customer  @relation(fields: [customer_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@map("customer_address")
+}
+
+model OtpNumber {
+  otp         Int     @id
+  is_selected Boolean @default(false)
+
+  @@map("otp_numbers")
+}
+
+model TokenVerifyOtp {
+  token     String    @id
+  createdat DateTime? @default(now()) @db.Timestamp(6)
+  updatedat DateTime? @default(now()) @db.Timestamp(6)
+  otp       Int       @unique
+
+  @@map("token_verify_otp")
+}
+
+model MailTemplate {
+  id        String    @id @db.VarChar(225)
+  createdat DateTime? @default(now()) @db.Timestamp(6)
+  updatedat DateTime? @default(now()) @db.Timestamp(6)
+  topic     String    @unique @db.VarChar(225)
+
+  @@map("mail_template")
+}

@@ -1,0 +1,28 @@
+{
+  "projectType": "library",
+  "root": "packages/libs/sendgrid",
+  "sourceRoot": "packages/libs/sendgrid/src",
+  "prefix": "tproject",
+  "targets": {
+    "test": {
+      "executor": "@nrwl/jest:jest",
+      "outputs": [
+        "coverage/packages/libs/sendgrid"
+      ],
+      "options": {
+        "jestConfig": "packages/libs/sendgrid/jest.config.js",
+        "passWithNoTests": true
+      }
+    },
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "options": {
+        "lintFilePatterns": [
+          "packages/libs/sendgrid/src/**/*.ts",
+          "packages/libs/sendgrid/src/**/*.html"
+        ]
+      }
+    }
+  },
+  "tags": []
+}

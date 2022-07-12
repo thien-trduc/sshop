@@ -1,0 +1,53 @@
+# FROM node:14-alpine AS dist
+
+# RUN apk update && apk add git
+
+# WORKDIR /app
+
+# COPY . .
+
+# RUN yarn install --frozen-lockfile --network-timeout 1000000 && yarn build:prod_event-service
+
+# FROM node:14-alpine AS dependencies
+
+# WORKDIR /app
+
+# COPY package.json yarn.lock ./
+
+# RUN yarn install --prod
+
+# FROM node:14-alpine
+
+# ARG PORT=3725
+
+# WORKDIR /app
+
+# COPY --from=dist /app/dist/packages/event-service  ./dist/event-service
+# COPY --from=dist /app/config/.event-service.production.env  ./.env
+# COPY --from=dist /app/prisma/thientrd_postgres.prisma  ./prisma/thientrd_postgres.prisma
+# COPY --from=dependencies /app/package.json ./package.json
+# COPY --from=dependencies /app/node_modules ./node_modules
+
+# EXPOSE $PORT
+
+# CMD [ "yarn", "start:prod_event-service" ]
+
+FROM node:16-alpine3.15 AS dependencies
+
+COPY package.json yarn.lock ./
+
+RUN yarn install --frozen-lockfile --production --network-timeout 1000000
+
+FROM node:16-alpine3.15
+
+ARG PORT=3725
+
+COPY dist/packages/event-service  ./dist/event-service
+COPY config/.event-service.production.env  ./.env
+COPY prisma/thientrd_postgres.prisma  ./prisma/thientrd_postgres.prisma
+COPY --from=dependencies package.json ./package.json
+COPY --from=dependencies node_modules ./node_modules
+
+EXPOSE $PORT
+
+CMD [ "yarn", "start:prod_event-service" ]

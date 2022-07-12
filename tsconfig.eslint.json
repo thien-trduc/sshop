@@ -1,0 +1,14 @@
+{
+  "extends": "./tsconfig.base.json",
+  "include": [
+    "packages/**/*.ts",
+    "*.ts",
+    "test/**/*.ts",
+    ".eslintrc.json"
+  ],
+  "exclude": [
+    "node_modules",
+    ".eslintrc.json"
+  ]
+}
+

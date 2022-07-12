@@ -1,0 +1,1 @@
+INSERT INTO public.publisher (id, createdat, updatedat, name, address, email) VALUES (1, '2022-05-22 09:37:04.937000', '2022-05-22 09:37:04.937000', 'Kim Đồng', '62 Cao Bá Quát', 'kimdong@gmail.com');

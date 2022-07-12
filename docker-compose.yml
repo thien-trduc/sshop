@@ -1,0 +1,85 @@
+version: '3.0'
+services:
+  trdthien_backend_admin_api:
+    image: trdthien_backend_admin_api
+    container_name: trdthien_backend_admin_api
+    build:
+      context: ./
+      dockerfile: ./deployments/Dockerfile.backend-admin-api
+    ports:
+      - '3435:3435'
+    expose:
+      - '3435'
+    networks:
+      - trdthien-network
+
+  trdthien_payment:
+    image: trdthien_payment
+    container_name: trdthien_payment
+    build:
+      context: ./
+      dockerfile: ./deployments/Dockerfile.payment
+    ports:
+      - '3645:3645'
+    expose:
+      - '3645'
+    networks:
+      - trdthien-network
+
+  trdthien_webhook:
+    image: trdthien_webhook
+    container_name: trdthien_webhook
+    build:
+      context: ./
+      dockerfile: ./deployments/Dockerfile.webhook
+    ports:
+      - '3702:3702'
+    expose:
+      - '3702'
+    networks:
+      - trdthien-network
+
+  trdthien_event:
+    image: trdthien_event
+    container_name: trdthien_event
+    build:
+      context: ./
+      dockerfile: ./deployments/Dockerfile.event-service
+    ports:
+      - '3725:3725'
+    expose:
+      - '3725'
+    networks:
+      - trdthien-network
+
+  trdthien_storage:
+    image: trdthien_storage
+    container_name: trdthien_storage
+    build:
+      context: ./
+      dockerfile: ./deployments/Dockerfile.storage
+    ports:
+      - '3768:3768'
+    expose:
+      - '3768'
+    volumes:
+      - /otp/static/sshop:/client/sshop
+    networks:
+      - trdthien-network
+
+#  trdthien-web-login:
+#    image: trdthien-web-login
+#    container_name: trdthien-web-login
+#    build:
+#      context: ./
+#      dockerfile: ./deployments/Dockerfile.login-web
+#    ports:
+#      - '3268:3268'
+#    expose:
+#      - '3268'
+#    networks:
+#      - trdthien-network
+networks:
+  trdthien-network:
+    external:
+      name: trdthien-network

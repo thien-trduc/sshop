@@ -1,0 +1,28 @@
+{
+  "projectType": "library",
+  "root": "packages/libs/firebase-admin",
+  "sourceRoot": "packages/libs/firebase-admin/src",
+  "prefix": "tproject",
+  "targets": {
+    "test": {
+      "executor": "@nrwl/jest:jest",
+      "outputs": [
+        "coverage/packages/libs/firebase-admin"
+      ],
+      "options": {
+        "jestConfig": "packages/libs/firebase-admin/jest.config.js",
+        "passWithNoTests": true
+      }
+    },
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "options": {
+        "lintFilePatterns": [
+          "packages/libs/firebase-admin/src/**/*.ts",
+          "packages/libs/firebase-admin/src/**/*.html"
+        ]
+      }
+    }
+  },
+  "tags": []
+}

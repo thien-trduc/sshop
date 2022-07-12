@@ -1,0 +1,27 @@
+{
+    "compileOnSave": false,
+    "compilerOptions": {
+        "rootDir": ".",
+        "sourceMap": true,
+        "declaration": false,
+        "moduleResolution": "node",
+        "emitDecoratorMetadata": true,
+        "experimentalDecorators": true,
+        "importHelpers": true,
+        "target": "es2015",
+        "module": "esnext",
+        "lib": ["es2017", "dom"],
+        "skipLibCheck": true,
+        "skipDefaultLibCheck": true,
+        "baseUrl": ".",
+        "paths": {
+            "@tproject/core": ["packages/core/src/index.ts"],
+            "@tproject/libs/core": ["packages/libs/core/src/index.ts"],
+            "@tproject/libs/data": ["packages/libs/data/src/index.ts"],
+            "@tproject/libs/firebase-admin": ["packages/libs/firebase-admin/src/index.ts"],
+            "@tproject/libs/redis": ["packages/libs/redis/src/index.ts"],
+            "@tproject/libs/sendgrid": ["packages/libs/sendgrid/src/index.ts"]
+        }
+    },
+    "exclude": ["node_modules", "tmp"]
+}

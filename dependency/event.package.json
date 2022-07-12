@@ -1,0 +1,64 @@
+{
+    "name": "tproject",
+    "version": "0.0.0",
+    "license": "MIT",
+    "scripts": {
+      "start:prod_event-service": "yarn gen_prod:postgres && cross-env NODE_ENV=production node ./dist/event-service/main.js",
+      "migrate:postgres": "npx prisma format --schema=./prisma/thientrd_postgres.prisma && dotenv -e config/.backend-admin-api.development.env -- npx prisma migrate dev --schema=./prisma/thientrd_postgres.prisma --name postgres-init",
+      "pull:postgres": "dotenv -e config/.backend-admin-api.development.env -- npx prisma db  pull --schema=./prisma/thientrd_postgres.prisma",
+      "reset:postgres": "dotenv -e config/.backend-admin-api.development.env -- npx prisma migrate reset --schema=./prisma/thientrd_postgres.prisma",
+      "gen:postgres": "dotenv -e config/.backend-admin-api.development.env -- npx prisma generate --schema=./prisma/thientrd_postgres.prisma",
+      "gen_prod:postgres": "dotenv -e .env -- npx prisma generate --schema=./prisma/thientrd_postgres.prisma",
+      "prepare": "husky install",
+      "lint": "eslint \"packages/**/*.ts\"",
+      "lint:fix": "eslint --fix . --ext .ts"
+    },
+    "private": true,
+    "dependencies": {
+      "@golevelup/nestjs-rabbitmq": "^2.2.0",
+      "@nestjs/axios": "^0.0.3",
+      "@nestjs/common": "^8.2.4",
+      "@nestjs/config": "^1.1.5",
+      "@nestjs/core": "^8.2.4",
+      "@nestjs/cqrs": "^8.0.1",
+      "@nestjs/event-emitter": "^1.0.0",
+      "@nestjs/jwt": "^8.0.0",
+      "@nestjs/microservices": "^8.2.4",
+      "@nestjs/platform-express": "^8.2.4",
+      "@nestjs/swagger": "^4.1.2",
+      "@prisma/client": "3.11.1",
+      "@sendgrid/mail": "^7.6.2",
+      "amqplib": "^0.8.0",
+      "bcrypt": "^5.0.1",
+      "class-transformer": "^0.2.3",
+      "class-validator": "0.13.1",
+      "cors": "^2.8.5",
+      "cross-env": "^7.0.3",
+      "express": "^4.17.2",
+      "express-basic-auth": "^1.2.0",
+      "express-ip": "^1.0.4",
+      "express-rate-limit": "^5.5.1",
+      "joi": "^14.3.1",
+      "lodash": "^4.17.21",
+      "mime-types": "^2.1.34",
+      "moment": "^2.29.3",
+      "reflect-metadata": "^0.1.13",
+      "request-context": "^2.0.0",
+      "rxfire": "^6.0.0",
+      "rxjs": "^7.4.0",
+      "swagger-ui-express": "^4.1.2",
+      "tslib": "^2.0.0",
+      "uuid": "^8.3.2",
+      "dotenv": "^16.0.0",
+      "dotenv-cli": "^5.1.0"
+    },
+    "devDependencies": {
+    },
+    "lint-staged": {
+      "*.ts": [
+        "eslint --fix",
+        "git add"
+      ]
+    }
+  }
+  

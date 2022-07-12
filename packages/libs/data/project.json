@@ -1,0 +1,23 @@
+{
+    "projectType": "library",
+    "root": "packages/libs/data",
+    "sourceRoot": "packages/libs/data/src",
+    "prefix": "tproject",
+    "targets": {
+        "test": {
+            "executor": "@nrwl/jest:jest",
+            "outputs": ["coverage/packages/libs/data"],
+            "options": {
+                "jestConfig": "packages/libs/data/jest.config.js",
+                "passWithNoTests": true
+            }
+        },
+        "lint": {
+            "executor": "@nrwl/linter:eslint",
+            "options": {
+                "lintFilePatterns": ["packages/libs/data/src/**/*.ts", "packages/libs/data/src/**/*.html"]
+            }
+        }
+    },
+    "tags": []
+}

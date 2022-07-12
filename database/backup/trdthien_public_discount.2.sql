@@ -1,0 +1,1 @@
+INSERT INTO public.discount (id, createdat, updatedat, name, start_date, end_date, description, employee_id) VALUES (1, '2022-06-01 14:13:09.915000', '2022-06-01 14:13:09.915000', 'Khuyến mãi giáng sinh', '2022-06-01 14:09:27.145000', '2022-08-01 14:09:27.145000', 'string', 1);
