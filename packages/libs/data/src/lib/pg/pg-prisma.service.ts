@@ -1,23 +1,23 @@
-import { OrderRepository } from './../repository/order.repository';
+import { OrderRepository } from './repository/order.repository';
 import { Injectable, OnApplicationBootstrap } from '@nestjs/common';
-import { BookRepository } from '../repository/book.repository';
-import { CategoryRepository } from '../repository/category.repository';
-import { PublisherRepository } from '../repository/publisher.repository';
-import { DepartmentRepository } from '../repository/department.repository';
-import { EmployeeRepository } from '../repository/employee.repository';
-import { UserProfileRepository } from '../repository/user-profile.repository';
-import { UserRepository } from '../repository/user.repository';
-import { CustomerRepository } from '../repository/customer.repository';
-import { PrismaService } from '../provider/prisma.service';
+import { BookRepository } from './repository/book.repository';
+import { CategoryRepository } from './repository/category.repository';
+import { PublisherRepository } from './repository/publisher.repository';
+import { DepartmentRepository } from './repository/department.repository';
+import { EmployeeRepository } from './repository/employee.repository';
+import { UserProfileRepository } from './repository/user-profile.repository';
+import { UserRepository } from './repository/user.repository';
+import { CustomerRepository } from './repository/customer.repository';
+import { PrismaService } from './../provider/prisma.service';
 import { IPgDataService } from './pg-data-service';
-import { CartRepository } from '../repository/cart.repository';
-import { TransactionRepository } from "../repository/transaction.repository";
-import { DiscountRepository } from '../repository/discount.repository';
-import { RoleRepository } from '../repository/role.repository';
-import { AuthorRepository } from '../repository/author.repository';
-import { OtpRepository } from '../repository/otp.repository';
-import { MailTemplateRepository } from '../repository/mail-template.repository';
-import { EventRepository } from '../repository/event.repository';
+import { CartRepository } from './repository/cart.repository';
+import { TransactionRepository } from "./repository/transaction.repository";
+import { DiscountRepository } from './repository/discount.repository';
+import { RoleRepository } from './repository/role.repository';
+import { AuthorRepository } from './repository/author.repository';
+import { OtpRepository } from './repository/otp.repository';
+import { MailTemplateRepository } from './repository/mail-template.repository';
+import { EventRepository } from './repository/event.repository';
 
 @Injectable()
 export class PgPrismaService implements IPgDataService, OnApplicationBootstrap {

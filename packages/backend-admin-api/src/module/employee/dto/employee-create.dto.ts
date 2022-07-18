@@ -1,7 +1,7 @@
-import { EmployeeModel } from '../../../../../libs/data/src/lib/model/model';
 import { ApiProperty } from '@nestjs/swagger';
-import { IsEmail, IsNotEmpty, IsPhoneNumber } from 'class-validator';
+import type { EmployeeModel } from '@tproject/libs/data';
 import { Transform } from 'class-transformer';
+import { IsEmail, IsNotEmpty, IsPhoneNumber } from 'class-validator';
 
 export class EmployeeCreateDto {
     @ApiProperty()
@@ -42,7 +42,7 @@ export class EmployeeCreateDto {
 
     @ApiProperty()
     @IsNotEmpty({ message: 'Phòng ban nhân viên không được trống!' })
-    @Transform((value) => +value)
+    @Transform((value) => Number(value))
     departmentId: number;
 
     toModel(): EmployeeModel {

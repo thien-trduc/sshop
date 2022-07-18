@@ -1,6 +1,7 @@
-import { BaseDto } from '../../../common/dto/base.dto';
-import { EmployeeModel } from '../../../../../libs/data/src/lib/model/model';
 import { ApiProperty } from '@nestjs/swagger';
+import type { EmployeeModel } from '@tproject/libs/data';
+
+import { BaseDto } from '../../../common/dto/base.dto';
 
 export class EmployeeDto extends BaseDto {
     @ApiProperty()

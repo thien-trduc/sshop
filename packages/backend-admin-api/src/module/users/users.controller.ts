@@ -1,5 +1,5 @@
 import { Body, Controller, Get, HttpCode, HttpStatus, Patch, Post, UseGuards } from '@nestjs/common';
-import { ApiBody, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiBody, ApiOperation, ApiTags } from '@nestjs/swagger';
 
 import type { BaseReponse } from '../../common/dto/base-respone.dto';
 import { JwtAuthGuard } from './../../guard/user.guard';
@@ -58,6 +58,7 @@ export class UsersController {
 
     @Patch('password')
     @UseGuards(JwtAuthGuard)
+    @ApiBearerAuth()
     @ApiOperation({ summary: '[USER] - Cập nhật lại mật khẩu' })
     updatePasswordUser(@Body() formData: PasswordResetDto): Promise<BaseReponse<{ isOK: boolean }>> {
         return this.service.updatePasswordUser(formData);

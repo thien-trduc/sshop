@@ -29,6 +29,14 @@ export class ConfigsJwtService implements JwtOptionsFactory {
     }
 
     // eslint-disable-next-line sonarjs/no-identical-functions
+    verifyJwtOtpOptions(secret: string): JwtModuleOptions {
+        return {
+            secret,
+            signOptions: { expiresIn: this.configService.get<string>('JWT_OTP_SECRET_KEY_EXPIRED_IN') },
+        };
+    }
+
+    // eslint-disable-next-line sonarjs/no-identical-functions
     createJwtOptions(): Promise<JwtModuleOptions> | JwtModuleOptions {
         return {
             secret: this.configService.get<string>('JWT_SECRET_KEY'),
@@ -39,8 +47,8 @@ export class ConfigsJwtService implements JwtOptionsFactory {
     // eslint-disable-next-line sonarjs/no-identical-functions
     createJwtRefreshOptions(): Promise<JwtModuleOptions> | JwtModuleOptions {
         return {
-            secret: this.configService.get<string>('JWT_SECRET_KEY'),
-            signOptions: { expiresIn: this.configService.get<string>('JWT_SECRET_KEY_EXPIRED_IN') },
+            secret: this.configService.get<string>('REFRESH_SECRET_KEY'),
+            signOptions: { expiresIn: this.configService.get<string>('REFRESH_SECRET_EXPIRED') },
         };
     }
 
@@ -51,15 +59,8 @@ export class ConfigsJwtService implements JwtOptionsFactory {
         };
     }
 
-    createJwtOtpOptions(secret: string): JwtModuleOptions {
-        return {
-            secret,
-            signOptions: { expiresIn: this.configService.get<string>('JWT_OTP_SECRET_KEY_EXPIRED_IN') },
-        };
-    }
-
     // eslint-disable-next-line sonarjs/no-identical-functions
-    verifyJwtOtpOptions(secret: string): JwtModuleOptions {
+    createJwtOtpOptions(secret: string): JwtModuleOptions {
         return {
             secret,
             signOptions: { expiresIn: this.configService.get<string>('JWT_OTP_SECRET_KEY_EXPIRED_IN') },

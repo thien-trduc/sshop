@@ -11,6 +11,7 @@ import { ConfigsRabbitService } from './service/configs.rabbit.service';
 import { ConfigsRedisService } from './service/configs.redis.service';
 import { ConfigsService } from './service/configs.service';
 import { ConfigStorageService } from './service/configs.storage.service';
+import { SharedService } from './shared.service';
 import { objectValid } from './validate/env.validate';
 
 @Global()
@@ -41,6 +42,8 @@ import { objectValid } from './validate/env.validate';
         ConfigsRedisService,
         CacheService,
         ConfigGaService,
+        SharedService,
+        SharedService,
     ],
     exports: [
         ConfigsService,
@@ -51,6 +54,7 @@ import { objectValid } from './validate/env.validate';
         ConfigsRedisService,
         CacheService,
         ConfigGaService,
+        SharedService,
     ],
 })
 export class SharedModule {}

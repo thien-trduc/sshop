@@ -202,6 +202,7 @@ export class UsersService {
         socialLoginVerifyDto = {
             token: jwt.sign(
                 {
+                    type: 'login',
                     username: userDto.username,
                     id: userDto.id,
                 },
@@ -237,6 +238,7 @@ export class UsersService {
         socialLoginVerifyDto = {
             token: jwt.sign(
                 {
+                    type: 'login',
                     username: user.username,
                     id: user.id,
                 },
@@ -268,6 +270,8 @@ export class UsersService {
         });
 
         if (!user) {
+            this.logger.error('Refresh token không đúng xin kiểm tra lại!');
+
             throw new HttpException(`Refresh token không đúng xin kiểm tra lại!`, HttpStatus.NOT_FOUND);
         }
 
@@ -276,6 +280,7 @@ export class UsersService {
         socialLoginVerifyDto = {
             token: jwt.sign(
                 {
+                    type: 'login',
                     username: user.username,
                     id: user.id,
                 },
@@ -308,6 +313,7 @@ export class UsersService {
 
         const refreshToken = jwt.sign(
             {
+                type: 'refresh',
                 username: user.username,
                 id: user.id,
             },

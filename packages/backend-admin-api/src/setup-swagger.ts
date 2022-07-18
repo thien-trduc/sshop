@@ -2,8 +2,8 @@ import type { INestApplication } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import * as basicAuth from 'express-basic-auth';
 
-import { SharedModule } from './shared/shared.module';
 import { ConfigsService } from './shared/service/configs.service';
+import { SharedModule } from './shared/shared.module';
 
 export function setupSwagger(app: INestApplication): void {
     const configService = app.select(SharedModule).get(ConfigsService);

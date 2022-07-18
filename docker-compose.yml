@@ -3,6 +3,7 @@ services:
   trdthien_backend_admin_api:
     image: trdthien_backend_admin_api
     container_name: trdthien_backend_admin_api
+    restart: "unless-stopped"
     build:
       context: ./
       dockerfile: ./deployments/Dockerfile.backend-admin-api
@@ -16,6 +17,7 @@ services:
   trdthien_payment:
     image: trdthien_payment
     container_name: trdthien_payment
+    restart: "unless-stopped"
     build:
       context: ./
       dockerfile: ./deployments/Dockerfile.payment
@@ -29,6 +31,7 @@ services:
   trdthien_webhook:
     image: trdthien_webhook
     container_name: trdthien_webhook
+    restart: "unless-stopped"
     build:
       context: ./
       dockerfile: ./deployments/Dockerfile.webhook
@@ -42,6 +45,7 @@ services:
   trdthien_event:
     image: trdthien_event
     container_name: trdthien_event
+    restart: "unless-stopped"
     build:
       context: ./
       dockerfile: ./deployments/Dockerfile.event-service
@@ -55,6 +59,7 @@ services:
   trdthien_storage:
     image: trdthien_storage
     container_name: trdthien_storage
+    restart: "unless-stopped"
     build:
       context: ./
       dockerfile: ./deployments/Dockerfile.storage

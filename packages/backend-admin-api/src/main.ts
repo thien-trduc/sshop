@@ -15,6 +15,7 @@ import { HttpExceptionFilter } from './filter';
 import { setupSwagger } from './setup-swagger';
 import { ConfigsService } from './shared/service/configs.service';
 import { SharedModule } from './shared/shared.module';
+import { setupTracing } from './tracing';
 
 export async function bootstrap(): Promise<NestExpressApplication> {
     const app = await NestFactory.create<NestExpressApplication>(AppModule, new ExpressAdapter());
@@ -63,7 +64,7 @@ export async function bootstrap(): Promise<NestExpressApplication> {
     );
 
     setupSwagger(app);
-
+    setupTracing(app);
     // app.use(
     //     rateLimit({
     //         windowMs: 15 * 60 * 1000, // 15 minutes

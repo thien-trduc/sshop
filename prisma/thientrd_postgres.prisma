@@ -461,3 +461,4 @@ model MailTemplate {
 
   @@map("mail_template")
 }
+

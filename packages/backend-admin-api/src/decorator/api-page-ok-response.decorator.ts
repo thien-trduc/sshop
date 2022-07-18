@@ -4,27 +4,24 @@ import { ApiExtraModels, ApiOkResponse, getSchemaPath } from '@nestjs/swagger';
 
 import { PageDto } from '../common';
 
-export function ApiPageOkResponse<T extends Type>(
-  model: T,
-  description?: string,
-): MethodDecorator {
-  return applyDecorators(
-    ApiExtraModels(PageDto),
-    ApiOkResponse({
-      description,
-      schema: {
-        allOf: [
-          { $ref: getSchemaPath(PageDto) },
-          {
-            properties: {
-              results: {
-                type: 'array',
-                items: { $ref: getSchemaPath(model) },
-              },
+export function ApiPageOkResponse<T extends Type>(model: T, description?: string): MethodDecorator {
+    return applyDecorators(
+        ApiExtraModels(PageDto),
+        ApiOkResponse({
+            description,
+            schema: {
+                allOf: [
+                    { $ref: getSchemaPath(PageDto) },
+                    {
+                        properties: {
+                            results: {
+                                type: 'array',
+                                items: { $ref: getSchemaPath(model) },
+                            },
+                        },
+                    },
+                ],
             },
-          },
-        ],
-      },
-    }),
-  );
+        }),
+    );
 }
